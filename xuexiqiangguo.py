@@ -423,3 +423,69 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#判断趣味答题子模块类型
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import time
+
+# 初始化浏览器
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+driver = webdriver.Chrome(options=options)
+
+# 登录学习强国
+def login(username, password):
+    driver.get('https://pc.xuexi.cn/points/login.html')
+    time.sleep(5)
+    
+    driver.find_element(By.XPATH, '//*[@id="app"]/div[2]/div/div[2]/div[2]/div/div/div[1]/div[2]/div[3]/input').send_keys(username)
+    driver.find_element(By.XPATH, '//*[@id="app"]/div[2]/div/div[2]/div[2]/div/div/div[1]/div[3]/div[3]/input').send_keys(password)
+    driver.find_element(By.XPATH, '//*[@id="app"]/div[2]/div/div[2]/div[2]/div/div/div[1]/div[5]/div').click()
+    time.sleep(5)
+
+# 判断趣味答题模块
+def judge_fun_quiz():
+    driver.get('https://pc.xuexi.cn/points/exam-game.html')
+    time.sleep(5)
+
+    try:
+        # 挑战答题
+        if driver.find_element(By.XPATH, '//*[@class="challenge-class-selector"]'):
+            print("这是挑战答题模块")
+            return "challenge"
+    except:
+        pass
+
+    try:
+        # 双人赛
+        if driver.find_element(By.XPATH, '//*[@class="duo-race-class-selector"]'):
+            print("这是双人赛模块")
+            return "duo_race"
+    except:
+        pass
+
+    try:
+        # 四人赛
+        if driver.find_element(By.XPATH, '//*[@class="four-race-class-selector"]'):
+            print("这是四人赛模块")
+            return "four_race"
+    except:
+        pass
+
+    print("未识别出趣味答题模块")
+    return None
+
+# 主函数
+def main():
+    username = 'your_username'
+    password = 'your_password'
+    
+    login(username, password)
+    result = judge_fun_quiz()
+    print("识别结果：", result)
+    driver.quit()
+
+if __name__ == "__main__":
+    main()
