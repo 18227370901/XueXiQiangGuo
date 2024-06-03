@@ -1,5 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from PIL import Image
+from aip import AipOcr
+import time
 
 # 登录学习强国
 def login(username, password):
@@ -110,6 +116,71 @@ def browse_local_channel(session, channel_id):
         print(article.text)
 
 
+# 趣味答题
+# 百度OCR配置
+APP_ID = 'your_app_id'
+API_KEY = 'your_api_key'
+SECRET_KEY = 'your_secret_key'
+client = AipOcr(APP_ID, API_KEY, SECRET_KEY)
+
+# 初始化浏览器
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+driver = webdriver.Chrome(options=options)
+
+# 登录学习强国
+#def login(username, password):
+#    driver.get('https://pc.xuexi.cn/points/login.html')
+#    time.sleep(5)
+    
+#    driver.find_element(By.XPATH, '//*[@id="your-username-selector"]').send_keys(username)
+#    driver.find_element(By.XPATH, '//*[@id="your-password-selector"]').send_keys(password)
+#    driver.find_element(By.XPATH, '//*[@id="your-login-button-selector"]').click()
+#    time.sleep(5)
+
+
+# 识别图片中的文字
+def ocr_image(image_path):
+    with open(image_path, 'rb') as fp:
+        image = fp.read()
+    result = client.basicGeneral(image)
+    words = [item['words'] for item in result['words_result']]
+    return '\n'.join(words)
+
+# 趣味答题
+def fun_quiz():
+    driver.get('https://pc.xuexi.cn/points/exam-game.html')
+    time.sleep(5)
+    
+    # 获取题目和选项的截图
+    question_element = driver.find_element(By.XPATH, '//*[@id="question-element-selector"]')
+    question_element.screenshot('question.png')
+    
+    # 使用百度OCR识别题目
+    question_text = ocr_image('question.png')
+    print("识别到的题目文本：", question_text)
+    
+    # 搜索答案并选择（伪代码）
+    # 这里需要实现题目搜索逻辑，根据搜索结果自动选择答案
+    # answer = search_answer(question_text)
+    # select_answer(answer)
+
+# 搜索答案（伪代码）
+def search_answer(question_text):
+    # 实现题目搜索逻辑
+    return "正确答案"
+
+# 选择答案（伪代码）
+def select_answer(answer):
+    # 实现自动选择答案逻辑
+    pass
+
+# 主函数
+def main():
+    
+
+
+
 # 主函数
 def main():
     username = "your_username"
@@ -135,6 +206,9 @@ def main():
     #浏览本地频道
     channel_id = "your_channel_id"
     browse_local_channel(session, channel_id)
+    #趣味答题
+    fun_quiz()
+    driver.quit()
 
 if __name__ == "__main__":
     main()
