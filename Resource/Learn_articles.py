@@ -11,3 +11,25 @@ def learn_articles():
             next_article_btn = driver.find_element(By.XPATH, 'NEXT_ARTICLE_BUTTON_XPATH')  # 替换为下一篇文章按钮的XPath
             next_article_btn.click()
             time.sleep(5)  # 等待新文章加载
+
+
+# # 获取文章列表
+# def get_articles(session):
+#     articles_url = "https://www.xuexi.cn/lgdata/1000000000000000002/index.html"
+#     headers = {
+#         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+#     }
+#     response = session.get(articles_url, headers=headers)
+#     soup = BeautifulSoup(response.text, "html.parser")
+#     articles = soup.find_all("div", class_="item")
+#     return articles
+
+# # 阅读文章
+# def read_article(session, article_url):
+#     headers = {
+#         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+#     }
+#     response = session.get(article_url, headers=headers)
+#     soup = BeautifulSoup(response.text, "html.parser")
+#     content = soup.find("div", class_="content")
+#     print(content.text)
